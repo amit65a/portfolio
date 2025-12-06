@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y20 Summit Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & CORE --- */
+        :root {
+            --primary: #a855f7;
+            --secondary: #ec4899;
+            --accent: #6366f1;
+            --bg: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            min-height: 100vh;
+            /* Changed from height to min-height for scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND FX --- */
+        .bg-grid {
+            position: fixed;
+            /* Fixed so it doesn't scroll away */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        .glow {
+            position: fixed;
+            /* Fixed so it stays in place */
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.2;
+            top: -20%;
+            left: -10%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            min-height: 100vh;
+            /* Allow container to grow */
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 20px 0;
+        }
+
+        header {
+            text-align: center;
+            animation: slideDown 1s ease-out;
+            padding-top: 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #c4b5fd, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .header-content p {
+            color: #cbd5e1;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* --- GALLERY --- */
+        .gallery {
+            flex-grow: 1;
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card-wrapper {
+            flex: 1;
+            display: flex;
+            transition: flex 0.5s ease;
+            min-width: 0;
+            /* Prevents flex items from overflowing */
+        }
+
+        .card {
+            width: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--border-light);
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            display: flex;
+            align-items: flex-end;
+            /* Ensure card has height if flex fails */
+            min-height: 400px;
+        }
+
+        .card-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        /* HOVER EFFECTS - DESKTOP ONLY */
+        @media (min-width: 769px) {
+            .card-wrapper:hover {
+                flex: 3;
+            }
+
+            .card-wrapper:hover .card-bg-img {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            .card-wrapper:hover .card {
+                box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+                border-color: var(--primary);
+            }
+
+            .card-wrapper:hover .card-label {
+                background: var(--primary);
+                border-color: var(--primary);
+                opacity: 1;
+            }
+        }
+
+        .card-label {
+            position: relative;
+            z-index: 2;
+            margin: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            opacity: 0.85;
+            transition: 0.3s;
+            white-space: nowrap;
+            /* Prevent text wrapping */
+        }
+
+        /* --- FOOTER --- */
+        .footer-info {
+            background: var(--glass);
+            border: 1px solid var(--border-light);
+            border-radius: 15px;
+            padding: 1.3rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 1rem;
+        }
+
+        .info-block h3 {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #94a3b8;
+            border-left: 2px solid var(--accent);
+            padding-left: 15px;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            object-fit: contain;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .container {
+                height: auto;
+                min-height: 100vh;
+                gap: 1rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.8rem;
+                padding: 0 10px;
+            }
+
+            .header-content p {
+                font-size: 0.85rem;
+            }
+
+            .gallery {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .card-wrapper {
+                width: 100%;
+                /* Disable flex expansion on mobile to prevent jumpy scrolling */
+                flex: none;
+            }
+
+            .card {
+                /* Explicit height for mobile cards */
+                height: 250px;
+                min-height: 250px;
+            }
+
+            .footer-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 1.5rem;
+            }
+
+            .quote {
+                display: block;
+                /* Show quote on mobile but styled differently */
+                border-left: none;
+                border-top: 2px solid var(--accent);
+                padding-left: 0;
+                padding-top: 10px;
+                margin-top: 10px;
+                font-size: 0.9rem;
+            }
+
+            .close-btn {
+                top: 10px;
+                right: 20px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="glow"></div>
+
+    <div class="container">
+
+        <header>
+            <div class="header-content">
+                <h1>Y20 Summit Portfolio</h1>
+                <p>Excellence & Participation</p>
+            </div>
+        </header>
+
+        <div class="gallery">
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_H8OEnst0daa8PjGExdWespiMdgBxU6w5DEn3qIijmzRK-1JLl68IiIU76LpMZLR9P_QQu0c8jeEWU7QQKFqhjtDCDrWcaP2NKPMKIH3rJwAH7e8VXroF5VFaXIiL3ZtDAu3yOgvpJ1zC-ttuno_nf4it_it7R6AQ3MNn1pyxdVnjWvCrWZv8LO3tr9AsanciIYkwyS3fxBXMXvLnIUPKtQ__Pt1FKvyLNFPmZFe3zpLmrxJ8kyEWdxlBrTn5OVBLzkPrONS7d3mFpRotWmqt3c6LQxg50g3Ug3bNmYmNErbv_HqS2x8IjcoMJtZVglWB9_ym2e69_m9N6HEBwYffaygJibBPhHnTS92D35IVySdWjRQdhIEePAiHCeIWywEgSRSQnjfFX2GqdWlpfSVeLcqNpdM2uym1XVaSYoybheG7WONeNj2ucKPTbdgVUcdHhCEKZLtTeMhTbzOq9wJHN5Wk_bSSeV1iAQElpLArvWzmf2yHUjeJVFyWa86ASatnmMxmltFbyk5yIjtPhnsJ6Sp2Xv7B4fTQJ2Yrjt-L1tjCF4kvzuNf75FhSI21gttN3Q4V35WgUSgmNOqJHK3EmTEkjJc_H7sAquCmhCm5QJo5ZnfS9q6PTU4ROuK70YJ0iZ_giabofC8eMft75NvRH7r8yvn-SmsDKHq7E4uICX4l7mg1YpfkG5hKSta8lo6udPj5zvqpTDvgKVqYxqttdMsqS4kjvH6sReuaxQgLmW0VUunX-joAyuGlwiN6k5Klekz3NHWfBMPcCxHBltlStmkZIwMzg87_gDRD4Ua_XvBy0yi-JYs2hAHwh_pGjjaOZfJr_EkyIaR1ygHYrVGj41spP1zIkGZVmQWu6n0Q3OweNNewekDK8bNv6E7vrO96699mqYpLDmSL4u-i2d9jJYaKeK1vOmLJZ8Pk0pwVxWpGu9sIWQlW3-S1PTrvXArCrNAdZ3Yi1Kt5Vu0dbyhKggTiuSxz05C0RHQsCcdCpcIQKUE45ZQn34w93DEV2ZJfjBG2nwY7eOxnxVn3_iKuh16WeH6J3yruCDdwkPJat-OKUkNkFGWe0Gd4W8XbNv2nsghuorAWEYCG4raZSu7CZcphPG63YTGs4bLi6mTkYjwNjaxOk=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_H8OEnst0daa8PjGExdWespiMdgBxU6w5DEn3qIijmzRK-1JLl68IiIU76LpMZLR9P_QQu0c8jeEWU7QQKFqhjtDCDrWcaP2NKPMKIH3rJwAH7e8VXroF5VFaXIiL3ZtDAu3yOgvpJ1zC-ttuno_nf4it_it7R6AQ3MNn1pyxdVnjWvCrWZv8LO3tr9AsanciIYkwyS3fxBXMXvLnIUPKtQ__Pt1FKvyLNFPmZFe3zpLmrxJ8kyEWdxlBrTn5OVBLzkPrONS7d3mFpRotWmqt3c6LQxg50g3Ug3bNmYmNErbv_HqS2x8IjcoMJtZVglWB9_ym2e69_m9N6HEBwYffaygJibBPhHnTS92D35IVySdWjRQdhIEePAiHCeIWywEgSRSQnjfFX2GqdWlpfSVeLcqNpdM2uym1XVaSYoybheG7WONeNj2ucKPTbdgVUcdHhCEKZLtTeMhTbzOq9wJHN5Wk_bSSeV1iAQElpLArvWzmf2yHUjeJVFyWa86ASatnmMxmltFbyk5yIjtPhnsJ6Sp2Xv7B4fTQJ2Yrjt-L1tjCF4kvzuNf75FhSI21gttN3Q4V35WgUSgmNOqJHK3EmTEkjJc_H7sAquCmhCm5QJo5ZnfS9q6PTU4ROuK70YJ0iZ_giabofC8eMft75NvRH7r8yvn-SmsDKHq7E4uICX4l7mg1YpfkG5hKSta8lo6udPj5zvqpTDvgKVqYxqttdMsqS4kjvH6sReuaxQgLmW0VUunX-joAyuGlwiN6k5Klekz3NHWfBMPcCxHBltlStmkZIwMzg87_gDRD4Ua_XvBy0yi-JYs2hAHwh_pGjjaOZfJr_EkyIaR1ygHYrVGj41spP1zIkGZVmQWu6n0Q3OweNNewekDK8bNv6E7vrO96699mqYpLDmSL4u-i2d9jJYaKeK1vOmLJZ8Pk0pwVxWpGu9sIWQlW3-S1PTrvXArCrNAdZ3Yi1Kt5Vu0dbyhKggTiuSxz05C0RHQsCcdCpcIQKUE45ZQn34w93DEV2ZJfjBG2nwY7eOxnxVn3_iKuh16WeH6J3yruCDdwkPJat-OKUkNkFGWe0Gd4W8XbNv2nsghuorAWEYCG4raZSu7CZcphPG63YTGs4bLi6mTkYjwNjaxOk=w1265-h982?auditContext=prefetch'); background-size: contain; background-repeat: no-repeat; background-position: center;">
+                    </div>
+                    <div class="card-label">Certificate of Participation</div>
+                </div>
+            </div>
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_GFZNHzo7TCvwr0X9ecKTuRG4CFpzaFfP4Aox4yv3AOOHF9Pk-tgSm43gD9p2_RN0CXxPWhNF_8fCLdE4rasfo5gY9kaku9sDmPWEr23obyZRlKggJiffEblkiE6iw2r68Ry--EtcIwj20l2oZ9pUjwRcbLRsRfNMN2DvFNPj4rENJhdjQ40coYd3pGCbRl9V_LChLlNekkq7BcUG94WrzdJAbH_fWdw_N1ls0YfEe0I1TqXm-phcUquLEWnfVTp9hq4Xk7O784hgIOZU-gBcs9uQDjjXhchBnwQELoOx3HP_LMbczKYne-Cj89FuDWjog-QIBiFC1SKo0oXhG8fFRWsr_Xj8hiP_jpqJrrH1w3ARygH8R8RXb8vioR0quvol4HqwuEYjH5zm6xOt0xWcYK3SDqZGUnAEG0hlGxi7SbnVZVdLm1xT_817ZpmdQo4S5K1wGAg31su42lvq1n0zLWnYXmBDEk78dclZKGVktOosfh0_ztr8ZjfT_o_OUAHIvy2IkQX4PzDKW49a6LLaXC8J5cL2HEIB7Hl119-mm2YU3G1gDdjGnB-9_5sv7aEokaDbD2U9OdgRVLl_3TYK60xEpxl0rGQNdFlWIeXSyQNd1HNZ-IRbpFt-C2AaeSbi7-wh6l6ubN2Y0vbWawjTBPGxDX-dTSsHORZd8OE_7z8diG80o1dlpRK-t5YdjgOhiwh6PtW3m2TBESHNh4Qtc0DhtGfZNoRpm_buXeO2Bh6dxFSips4ur1KktLqZ3futojTokp4BkySESn1wejC6WDCVESJ6BnqgN18WKW49MDDrUiFO0K7Ma7ZsN7SfGxaw9fe4Efy4BiijE7jd9lXABwSocoVe3Du0XsdN4jo70zrBYNcVikZCZ7JheO7A9Kocp1ZqFk_v8CMJ8epDQiUkhhRmX5lbnkUBA1Nv2_wZK5yo-FEtJ0BIiFGpHCscIJ1t6SiFfg13MYgAZnYaegqzsLkF_OFt2_a3dfA5_EXTHWumqTHA6ftAk-ZIHC2EBdJz1vGqjbSvaWUDGqmxvusQrHi8sZZbMCbCdTaVlbgBzk2Cza657KVIsFWbTZ8SDiAgh5PsWsTfzqOEmr7GaEqaFic_DGoX2fwYQs1wR1awQWI3BLXSo=w1427-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_GFZNHzo7TCvwr0X9ecKTuRG4CFpzaFfP4Aox4yv3AOOHF9Pk-tgSm43gD9p2_RN0CXxPWhNF_8fCLdE4rasfo5gY9kaku9sDmPWEr23obyZRlKggJiffEblkiE6iw2r68Ry--EtcIwj20l2oZ9pUjwRcbLRsRfNMN2DvFNPj4rENJhdjQ40coYd3pGCbRl9V_LChLlNekkq7BcUG94WrzdJAbH_fWdw_N1ls0YfEe0I1TqXm-phcUquLEWnfVTp9hq4Xk7O784hgIOZU-gBcs9uQDjjXhchBnwQELoOx3HP_LMbczKYne-Cj89FuDWjog-QIBiFC1SKo0oXhG8fFRWsr_Xj8hiP_jpqJrrH1w3ARygH8R8RXb8vioR0quvol4HqwuEYjH5zm6xOt0xWcYK3SDqZGUnAEG0hlGxi7SbnVZVdLm1xT_817ZpmdQo4S5K1wGAg31su42lvq1n0zLWnYXmBDEk78dclZKGVktOosfh0_ztr8ZjfT_o_OUAHIvy2IkQX4PzDKW49a6LLaXC8J5cL2HEIB7Hl119-mm2YU3G1gDdjGnB-9_5sv7aEokaDbD2U9OdgRVLl_3TYK60xEpxl0rGQNdFlWIeXSyQNd1HNZ-IRbpFt-C2AaeSbi7-wh6l6ubN2Y0vbWawjTBPGxDX-dTSsHORZd8OE_7z8diG80o1dlpRK-t5YdjgOhiwh6PtW3m2TBESHNh4Qtc0DhtGfZNoRpm_buXeO2Bh6dxFSips4ur1KktLqZ3futojTokp4BkySESn1wejC6WDCVESJ6BnqgN18WKW49MDDrUiFO0K7Ma7ZsN7SfGxaw9fe4Efy4BiijE7jd9lXABwSocoVe3Du0XsdN4jo70zrBYNcVikZCZ7JheO7A9Kocp1ZqFk_v8CMJ8epDQiUkhhRmX5lbnkUBA1Nv2_wZK5yo-FEtJ0BIiFGpHCscIJ1t6SiFfg13MYgAZnYaegqzsLkF_OFt2_a3dfA5_EXTHWumqTHA6ftAk-ZIHC2EBdJz1vGqjbSvaWUDGqmxvusQrHi8sZZbMCbCdTaVlbgBzk2Cza657KVIsFWbTZ8SDiAgh5PsWsTfzqOEmr7GaEqaFic_DGoX2fwYQs1wR1awQWI3BLXSo=w1427-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Event Highlights</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-info">
+            <div class="info-block">
+                <h3>Event</h3>
+                <p>Y20 Consultation</p>
+            </div>
+            <div class="info-block">
+                <h3>Location</h3>
+                <p>Bhubaneswar, Odisha, India</p>
+            </div>
+            <div class="info-block">
+                <h3>Date</h3>
+                <p>April 14-15, 2025</p>
+            </div>
+            <div class="quote">"Representing youth voices on a global stage."</div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img id="modalImg" src="">
+    </div>
+
+    <script>
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(url) {
+            modal.style.display = 'flex';
+            modalImg.src = url;
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+
+</body>
+
+</html>
