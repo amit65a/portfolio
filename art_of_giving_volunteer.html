@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Technology Volunteer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & CORE --- */
+        :root {
+            --primary: #a855f7;
+            --secondary: #ec4899;
+            --accent: #6366f1;
+            --bg: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            min-height: 100vh;
+            /* Changed from height to min-height for scrolling */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- BACKGROUND FX --- */
+        .bg-grid {
+            position: fixed;
+            /* Fixed so it doesn't scroll away */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        .glow {
+            position: fixed;
+            /* Fixed so it stays in place */
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.2;
+            top: -20%;
+            left: -10%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 20px 0;
+        }
+
+        header {
+            text-align: center;
+            animation: slideDown 1s ease-out;
+            padding-top: 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #c4b5fd, #ec4899);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .header-content p {
+            color: #cbd5e1;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* --- GALLERY --- */
+        .gallery {
+            flex-grow: 1;
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card-wrapper {
+            flex: 1;
+            display: flex;
+            transition: flex 0.5s ease;
+            min-width: 0;
+            /* Prevents flex items from overflowing */
+        }
+
+        .card {
+            width: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--border-light);
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            display: flex;
+            align-items: flex-end;
+            /* Ensure card has height if flex fails */
+            min-height: 400px;
+        }
+
+        .card-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        /* HOVER EFFECTS - DESKTOP ONLY */
+        @media (min-width: 769px) {
+            .card-wrapper:hover {
+                flex: 3;
+            }
+
+            .card-wrapper:hover .card-bg-img {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            .card-wrapper:hover .card {
+                box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+                border-color: var(--primary);
+            }
+
+            .card-wrapper:hover .card-label {
+                background: var(--primary);
+                border-color: var(--primary);
+                opacity: 1;
+            }
+        }
+
+        .card-label {
+            position: relative;
+            z-index: 2;
+            margin: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            opacity: 0.85;
+            transition: 0.3s;
+            white-space: nowrap;
+            /* Prevent text wrapping */
+        }
+
+        /* --- FOOTER --- */
+        .footer-info {
+            background: var(--glass);
+            border: 1px solid var(--border-light);
+            border-radius: 15px;
+            padding: 1.3rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* Aligned to top for description */
+            backdrop-filter: blur(10px);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            /* Allow wrapping for description */
+            gap: 20px;
+        }
+
+        .info-block {
+            flex-shrink: 0;
+        }
+
+        .info-block h3 {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            flex-grow: 1;
+            max-width: 600px;
+            border-left: 2px solid var(--accent);
+            padding-left: 20px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .description ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .description li {
+            margin-bottom: 5px;
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            object-fit: contain;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .container {
+                height: auto;
+                min-height: 100vh;
+                gap: 1rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.8rem;
+                padding: 0 10px;
+            }
+
+            .header-content p {
+                font-size: 0.85rem;
+            }
+
+            .gallery {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .card-wrapper {
+                width: 100%;
+                /* Disable flex expansion on mobile to prevent jumpy scrolling */
+                flex: none;
+            }
+
+            .card {
+                /* Explicit height for mobile cards */
+                height: 250px;
+                min-height: 250px;
+            }
+
+            .footer-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 1.5rem;
+            }
+
+            .description {
+                border-left: none;
+                border-top: 2px solid var(--accent);
+                padding-left: 0;
+                padding-top: 15px;
+                text-align: left;
+            }
+
+            .close-btn {
+                top: 10px;
+                right: 20px;
+                font-size: 2.5rem;
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="glow"></div>
+
+    <div class="container">
+
+        <header>
+            <div class="header-content">
+                <h1>Indigenous Education Initiative</h1>
+                <p>Art of Giving</p>
+            </div>
+        </header>
+
+        <div class="gallery">
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_F0Yk8hdtKYBhY2mGwJZ82mHzZH-H1QbsbZdF3qQ7g5jIlyN8xYCUDKHj-csKY_5eabsSphR8brAnDcdHScYipxoDb5m-D1ak4Y5vtshpTxUtuvRdPzOTWHNrO598UM5tmrCNqkHDqXKwwho5rQYDm7-3kod_mFmZghlXrTMaZD715lKN3clexUsVDz_e00gPXZzmfQTh_mdvjHgjHewwj9J8H_LpJAnm45vcFRCtrIxDCSdoqzXE1rzIBR_YwX2ybPxK2DUZ9gcJGh9LayRvknKJtTBPR-dlHVuKmw7x90RIMnlaZV-HA-qbwnkazpCV8cyHXnYilQ3bFRv7uBXUPIkC6ywaKD_LdiBezriLMr_kuk0qbSZtoG-8KHlw8wa9tVauLnHKOakMPztYezMGhgJb9sTdkwkIXcNR8mbcPJENpp42tByzA-6SS8PfjvwLB-K3z1oLAyL8jN-PcyzqmSGjL6M2tHzObVK_ZbdHY0-rnrwPmhUrN1WXfxqcAL7hFxiRHTLuVyVE8yXLycrfsy3j-1RztzqJ7Ot8O5KPjhiTp4PzFAhQGBsStjqd1fDxZBksOQJEHAElNoGTembuKdNx-K-iNvT5cBEf8P8Yp9ylU-n0rZkCCPTkaW-2Y4pmFC4Os7YOPGB-C_IIlPucmK91Q8yyBo1hY5z0tYbD6g2EeUrhVnE_lTYSh9FLTM6xQiopgSKHrV5YxUOWX_-OmJ0rMcKnS0ThHTMqJ-vUukCp9roPQZc_SqgLPtYXFeRTvEERj2Ru_wZQS3yWNee_TOPQZaFjZSoKW9ABDw6dtm6C2g2nc2OvwEPUP9fWEFF7NexQiT6bJh7JxSVGhPS-pFBU5xg21ZfbCKwUzK1yc6HYgX7UauxNIuueTPyooKY69RJJ2K2m96DyEwhOgxiv30zOZqVhEDFvrpULK32Nt3jSnU8eslLQu2p_PFtaH2wK7DOqPG6WLWqly3zyPxZnAesuTB0K8_mzuOcFJJd5KluKYuMEdSPtj1e2Axafz_qZ6WsEqeV2OrKEKsG4hKvoF1FuWnhTjPos9LErTtqZDsqb8Nl1E6e1LXj_iSzwHYIIhmTDgaR7exPQDQQTGenvTNs1kxs_IHBtsmjpwn5rdxULUWa-Y=w1910-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_F0Yk8hdtKYBhY2mGwJZ82mHzZH-H1QbsbZdF3qQ7g5jIlyN8xYCUDKHj-csKY_5eabsSphR8brAnDcdHScYipxoDb5m-D1ak4Y5vtshpTxUtuvRdPzOTWHNrO598UM5tmrCNqkHDqXKwwho5rQYDm7-3kod_mFmZghlXrTMaZD715lKN3clexUsVDz_e00gPXZzmfQTh_mdvjHgjHewwj9J8H_LpJAnm45vcFRCtrIxDCSdoqzXE1rzIBR_YwX2ybPxK2DUZ9gcJGh9LayRvknKJtTBPR-dlHVuKmw7x90RIMnlaZV-HA-qbwnkazpCV8cyHXnYilQ3bFRv7uBXUPIkC6ywaKD_LdiBezriLMr_kuk0qbSZtoG-8KHlw8wa9tVauLnHKOakMPztYezMGhgJb9sTdkwkIXcNR8mbcPJENpp42tByzA-6SS8PfjvwLB-K3z1oLAyL8jN-PcyzqmSGjL6M2tHzObVK_ZbdHY0-rnrwPmhUrN1WXfxqcAL7hFxiRHTLuVyVE8yXLycrfsy3j-1RztzqJ7Ot8O5KPjhiTp4PzFAhQGBsStjqd1fDxZBksOQJEHAElNoGTembuKdNx-K-iNvT5cBEf8P8Yp9ylU-n0rZkCCPTkaW-2Y4pmFC4Os7YOPGB-C_IIlPucmK91Q8yyBo1hY5z0tYbD6g2EeUrhVnE_lTYSh9FLTM6xQiopgSKHrV5YxUOWX_-OmJ0rMcKnS0ThHTMqJ-vUukCp9roPQZc_SqgLPtYXFeRTvEERj2Ru_wZQS3yWNee_TOPQZaFjZSoKW9ABDw6dtm6C2g2nc2OvwEPUP9fWEFF7NexQiT6bJh7JxSVGhPS-pFBU5xg21ZfbCKwUzK1yc6HYgX7UauxNIuueTPyooKY69RJJ2K2m96DyEwhOgxiv30zOZqVhEDFvrpULK32Nt3jSnU8eslLQu2p_PFtaH2wK7DOqPG6WLWqly3zyPxZnAesuTB0K8_mzuOcFJJd5KluKYuMEdSPtj1e2Axafz_qZ6WsEqeV2OrKEKsG4hKvoF1FuWnhTjPos9LErTtqZDsqb8Nl1E6e1LXj_iSzwHYIIhmTDgaR7exPQDQQTGenvTNs1kxs_IHBtsmjpwn5rdxULUWa-Y=w1910-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Teaching & Mentorship</div>
+                </div>
+            </div>
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_ELtOUKy3ePx5FZSNZ2YjY_MqMcMKWu9LYbPfEAEWX0Nk-uB3hvq_7aaRFsVJYIrSR5GE9rZBM7hXT-CnNI1WPME4UqMlTq9CvfVnsjlI07gSSD4Bs2sjWVEwxYHuzgEX7ZZnk5wG1CeYMYBrLDYk2axpjDs8_sSIxGps4Y2W6CSuRiusAhArnO3Dl5mRrdnyvLGlFyKl9sr0lPF4m8fJtD9AnHEnz2aHHjgj7dZuw_g11z9ijBD9FMHMXvm-gAe27EBCUmI-zmbrQPZFjlPl7dH3YKbf_FQIPLASZ0g-P3XKjM0NQqliAB-fbSBerhzR-jHGVFpU2xGcaIls65wIcn6-DxMB_rxfcpos2TJbaTkgk6ovGc_CbyqG0OCGG43viUvVYg-8ntz5UAu6rTTHeE85t7Hgx94w2nyro8m3y6ubSXUxG8ls2eQto5mpJHhZhrIBGXPRtsKNduMj4roUo5stfXZFwswxW7MQfCU7cRGGNczwcW3Q59BmXXrGdl7jK3_HS7mYEPRnQvXuU6W4Wm34GyHMggqJGdG-jnOoG0-vWkUqiQ2WSyD6W_cOzycxz27eHzvlqCatxNeVZcTvKf-jHiKnipdzz5mWajPC3utrpYWSsZbDi8_Qg4VDsHj2XT0jVZ2j3yhz7bi6mGBFxi3SxtTcuD0ENgEUW9O3HPf25o6Qr3Mb2fnTvRHQZ84j5YAx65HoqxPFSgASmTSgcFfBzTMXNKj8-_pJnqBXbA0agzKg7aR_vfBY5l4PiMgriwio5tLO1iCfDn2tYzpCtfZzoBSiHVKtRsDjysWqxbSB2nBe4qOa-2nZ6RH57SL1_lXC4jL4hzaQnyc81AnDOfpOkdQir18b4ZPp5dazXv9qTflVbt5IKX1umP37FlYq6pt-TCLbvoWy_ozmGKzs2y6coWqdWBj1maKI3WTHZGEbplKHHXT7qQtbs1587igqpClK1BcfSXxkUKQOscNMpFPRv9EyEzZskHqVAZpWjBPJFvV2nrh-Pk4Bye-UiAzXUwqbb35cungoDGIpR3e7ZQq26ZkHaleNX61RV5i-eRclZHPBsM73rxb-v6sW5Qh6z-B7vx7lrM7zTZgRR9two53RRx2BMlrYQZyUNMRwMItj4S5XY=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_ELtOUKy3ePx5FZSNZ2YjY_MqMcMKWu9LYbPfEAEWX0Nk-uB3hvq_7aaRFsVJYIrSR5GE9rZBM7hXT-CnNI1WPME4UqMlTq9CvfVnsjlI07gSSD4Bs2sjWVEwxYHuzgEX7ZZnk5wG1CeYMYBrLDYk2axpjDs8_sSIxGps4Y2W6CSuRiusAhArnO3Dl5mRrdnyvLGlFyKl9sr0lPF4m8fJtD9AnHEnz2aHHjgj7dZuw_g11z9ijBD9FMHMXvm-gAe27EBCUmI-zmbrQPZFjlPl7dH3YKbf_FQIPLASZ0g-P3XKjM0NQqliAB-fbSBerhzR-jHGVFpU2xGcaIls65wIcn6-DxMB_rxfcpos2TJbaTkgk6ovGc_CbyqG0OCGG43viUvVYg-8ntz5UAu6rTTHeE85t7Hgx94w2nyro8m3y6ubSXUxG8ls2eQto5mpJHhZhrIBGXPRtsKNduMj4roUo5stfXZFwswxW7MQfCU7cRGGNczwcW3Q59BmXXrGdl7jK3_HS7mYEPRnQvXuU6W4Wm34GyHMggqJGdG-jnOoG0-vWkUqiQ2WSyD6W_cOzycxz27eHzvlqCatxNeVZcTvKf-jHiKnipdzz5mWajPC3utrpYWSsZbDi8_Qg4VDsHj2XT0jVZ2j3yhz7bi6mGBFxi3SxtTcuD0ENgEUW9O3HPf25o6Qr3Mb2fnTvRHQZ84j5YAx65HoqxPFSgASmTSgcFfBzTMXNKj8-_pJnqBXbA0agzKg7aR_vfBY5l4PiMgriwio5tLO1iCfDn2tYzpCtfZzoBSiHVKtRsDjysWqxbSB2nBe4qOa-2nZ6RH57SL1_lXC4jL4hzaQnyc81AnDOfpOkdQir18b4ZPp5dazXv9qTflVbt5IKX1umP37FlYq6pt-TCLbvoWy_ozmGKzs2y6coWqdWBj1maKI3WTHZGEbplKHHXT7qQtbs1587igqpClK1BcfSXxkUKQOscNMpFPRv9EyEzZskHqVAZpWjBPJFvV2nrh-Pk4Bye-UiAzXUwqbb35cungoDGIpR3e7ZQq26ZkHaleNX61RV5i-eRclZHPBsM73rxb-v6sW5Qh6z-B7vx7lrM7zTZgRR9two53RRx2BMlrYQZyUNMRwMItj4S5XY=w1265-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Interaction</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-info">
+            <div class="info-block">
+                <h3>Role</h3>
+                <p>Educational Volunteer</p>
+                <div style="margin-top: 40px; display: inline-block; animation: bounce 2s infinite;">
+                    <a href="https://artofgiving.in.net/aog-in-actions/education-for-all/" target="_blank"
+                        style="color: var(--secondary); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--secondary); font-size: 0.9rem;">
+                        View Initiative &rarr;
+                    </a>
+                </div>
+            </div>
+            <div class="info-block">
+                <h3>Location</h3>
+                <p>Bhubaneswar, Odisha</p>
+            </div>
+
+            <div class="description">
+                <ul>
+                    <li>Tutored 50+ indigenous children in core subjects using creative, engaging teaching approaches.
+                    </li>
+                    <li>Developed cross-cultural communication skills, community engagement, and inclusive education.
+                    </li>
+                    <li>Addressed educational inequality through specialized, culturally responsive teaching methods.
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img id="modalImg" src="">
+    </div>
+
+    <script>
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(url) {
+            modal.style.display = 'flex';
+            modalImg.src = url;
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+
+</body>
+
+</html>

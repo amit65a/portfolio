@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDCS Volunteer Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- RESET & CORE --- */
+        :root {
+            --primary: #a855f7;
+            --secondary: #ec4899;
+            --accent: #6366f1;
+            --bg: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* --- BACKGROUND FX --- */
+        .bg-grid {
+            position: fixed;
+            /* Fixed so it doesn't scroll away */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(var(--border-light) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+            z-index: -2;
+        }
+
+        .glow {
+            position: fixed;
+            /* Fixed so it stays in place */
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.2;
+            top: -20%;
+            left: -10%;
+            filter: blur(80px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            width: 95%;
+            max-width: 1400px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 20px 0;
+        }
+
+        header {
+            text-align: center;
+            animation: slideDown 1s ease-out;
+            padding-top: 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #c4b5fd, #ec4899);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .header-content p {
+            color: #cbd5e1;
+            font-size: 1rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        /* --- GALLERY --- */
+        .gallery {
+            flex-grow: 1;
+            display: flex;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card-wrapper {
+            flex: 1;
+            display: flex;
+            transition: flex 0.5s ease;
+            min-width: 0;
+            /* Prevents flex items from overflowing */
+        }
+
+        .card {
+            width: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--border-light);
+            transition: all 0.4s ease;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            display: flex;
+            align-items: flex-end;
+            /* Ensure card has height if flex fails */
+            min-height: 400px;
+        }
+
+        .card-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+            transition: transform 0.6s ease, opacity 0.6s ease;
+        }
+
+        /* HOVER EFFECTS - DESKTOP ONLY */
+        @media (min-width: 769px) {
+            .card-wrapper:hover {
+                flex: 3;
+            }
+
+            .card-wrapper:hover .card-bg-img {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            .card-wrapper:hover .card {
+                box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+                border-color: var(--primary);
+            }
+
+            .card-wrapper:hover .card-label {
+                background: var(--primary);
+                border-color: var(--primary);
+                opacity: 1;
+            }
+        }
+
+        .card-label {
+            position: relative;
+            z-index: 2;
+            margin: 20px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            opacity: 0.85;
+            transition: 0.3s;
+            white-space: nowrap;
+            /* Prevent text wrapping */
+        }
+
+        /* --- FOOTER --- */
+        .footer-info {
+            background: var(--glass);
+            border: 1px solid var(--border-light);
+            border-radius: 15px;
+            padding: 1.3rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            /* Aligned to top for description */
+            backdrop-filter: blur(10px);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            /* Allow wrapping for description */
+            gap: 20px;
+        }
+
+        .info-block {
+            flex-shrink: 0;
+        }
+
+        .info-block h3 {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            flex-grow: 1;
+            max-width: 600px;
+            border-left: 2px solid var(--accent);
+            padding-left: 20px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .description ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .description li {
+            margin-bottom: 10px;
+            /* Increased margin for readability */
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            object-fit: contain;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            cursor: pointer;
+            color: white;
+            z-index: 1000;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .container {
+                height: auto;
+                min-height: 100vh;
+                gap: 1rem;
+            }
+
+            .header-content h1 {
+                font-size: 1.8rem;
+                padding: 0 10px;
+            }
+
+            .header-content p {
+                font-size: 0.85rem;
+            }
+
+            .gallery {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .card-wrapper {
+                width: 100%;
+                /* Disable flex expansion on mobile to prevent jumpy scrolling */
+                flex: none;
+            }
+
+            .card {
+                /* Explicit height for mobile cards */
+                height: 250px;
+                min-height: 250px;
+            }
+
+            .footer-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+                padding: 1.5rem;
+            }
+
+            .description {
+                border-left: none;
+                border-top: 2px solid var(--accent);
+                padding-left: 0;
+                padding-top: 15px;
+                text-align: left;
+            }
+
+            .close-btn {
+                top: 10px;
+                right: 20px;
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-grid"></div>
+    <div class="glow"></div>
+
+    <div class="container">
+
+        <header>
+            <div class="header-content">
+                <h1>HDCS Volunteer</h1>
+                <p>Disaster Relief & Sustainable Construction</p>
+            </div>
+        </header>
+
+        <div class="gallery">
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_Er6jeJt1JIM_jLRd6VqKuUe_7gQC2y8oEDL0_cRvLsLpxTUwehkpTA9Z3VfGBYXWwOeXBhe3I6y59Q7aLA0dB8u5Octkp1fa6RIJdkzhgYv3y9uMHoC-Xlmb5ogMbm4YVzo7M87HlYWYpGEqP9hd10Dql4XysW1LHaOqmgIq_Rh352Jbe7RUjF5PSYes0A760UAQhP-eanEgT7et2vKZg48uzgKd3IBBZqORX3SX7WNvncS91i89XQMNuODKhYocjBM1xGSvGn9PKzZipwvOBJoBWlyNe7-xGTSiJ4cHc3AaHzpks62O74crv24wQX_QF90TmQtxgpc5MZlczljrJK8sVkvRqe9X819me4WucL_mr4vBbGNmYXqZnWMbvtnt9k3OTx5wKJEcsnyO1KcOeU3896RBc3UclLWSTT5wnPKxKKVv-wxM5-L8HsYhOZLfhqW3h4P9VEDr63WyCViBdb28K7h9zGPT-3m4MslpkY1XPXAj87t9wsty0Upt6iR3yx2dhFOWlAsK38sM54BXxzzf_zE_IExeLd2NkVkYASQDBfDscqTxnqynUihjvuDgxAP0VmK036v8Ju7fP2ysQPMrQCiA4k7yBZJvaqUEQQc63wrUWTRaCEDq4PoPrBEda3ydEw6fA8yqHulOaGEcL0xDXe7k2IxoHkCzD5982RNAHMtH5DxGwwISnEOy32wrwcbmrfdIRM3m1911xnQ2tNWLGcX3QHGNLjOGKeBjmdyQsns53jpb6Nvyj714O2a--WBBKSoSibw-QSSm8FlPI6norHFmbr7ghXx3HiSpSkoGiDws6y1AD0tEmBbBNAsiP4OG48zOAvWE5qYBLuqEGRlLYR3WhOlvzR-e9L25zEkIkP3i0nK4iO7eQrjBDjld0knP4KtdFgKBgpOpUp9g19I2rOd8Z_SD9PKINs-xI24TVEOpC24Sn27PX8mx-S8qpX0NGTdxOISeutNHskwpOUBVMF2SOAgC-MxJTCAEnQotWt17034eN5ZVrPYFPKAQ_qQgK7_rpXEgExYq7uM6r-1tfMgqHewlacTkVEfOpXxwMW047IWIPd0_g_DlQTvh1dyNb2OY22MRecPsCGOSzOG1qDnAp6tJ991pIvONPHFN_chg=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_Er6jeJt1JIM_jLRd6VqKuUe_7gQC2y8oEDL0_cRvLsLpxTUwehkpTA9Z3VfGBYXWwOeXBhe3I6y59Q7aLA0dB8u5Octkp1fa6RIJdkzhgYv3y9uMHoC-Xlmb5ogMbm4YVzo7M87HlYWYpGEqP9hd10Dql4XysW1LHaOqmgIq_Rh352Jbe7RUjF5PSYes0A760UAQhP-eanEgT7et2vKZg48uzgKd3IBBZqORX3SX7WNvncS91i89XQMNuODKhYocjBM1xGSvGn9PKzZipwvOBJoBWlyNe7-xGTSiJ4cHc3AaHzpks62O74crv24wQX_QF90TmQtxgpc5MZlczljrJK8sVkvRqe9X819me4WucL_mr4vBbGNmYXqZnWMbvtnt9k3OTx5wKJEcsnyO1KcOeU3896RBc3UclLWSTT5wnPKxKKVv-wxM5-L8HsYhOZLfhqW3h4P9VEDr63WyCViBdb28K7h9zGPT-3m4MslpkY1XPXAj87t9wsty0Upt6iR3yx2dhFOWlAsK38sM54BXxzzf_zE_IExeLd2NkVkYASQDBfDscqTxnqynUihjvuDgxAP0VmK036v8Ju7fP2ysQPMrQCiA4k7yBZJvaqUEQQc63wrUWTRaCEDq4PoPrBEda3ydEw6fA8yqHulOaGEcL0xDXe7k2IxoHkCzD5982RNAHMtH5DxGwwISnEOy32wrwcbmrfdIRM3m1911xnQ2tNWLGcX3QHGNLjOGKeBjmdyQsns53jpb6Nvyj714O2a--WBBKSoSibw-QSSm8FlPI6norHFmbr7ghXx3HiSpSkoGiDws6y1AD0tEmBbBNAsiP4OG48zOAvWE5qYBLuqEGRlLYR3WhOlvzR-e9L25zEkIkP3i0nK4iO7eQrjBDjld0knP4KtdFgKBgpOpUp9g19I2rOd8Z_SD9PKINs-xI24TVEOpC24Sn27PX8mx-S8qpX0NGTdxOISeutNHskwpOUBVMF2SOAgC-MxJTCAEnQotWt17034eN5ZVrPYFPKAQ_qQgK7_rpXEgExYq7uM6r-1tfMgqHewlacTkVEfOpXxwMW047IWIPd0_g_DlQTvh1dyNb2OY22MRecPsCGOSzOG1qDnAp6tJ991pIvONPHFN_chg=w1265-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Construction Site</div>
+                </div>
+            </div>
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_EOxq0Si9fSN_nPxrrsUxgp4tr55GN-zInFTykO4wrjchXOGXWZ_HhgBq4TlC1ZUXUteLTQswbDKHVMwq-bmc6SaypNQj66Kru7yKzSnkBFwehWdRsQhm-5reaBaGQqK5mEzEfGsgia6F9f3Gj8hkzvpImqvu9-wZTMaVYstnF_k0mvOiN5QH-YCglYeLvppAuP2pXUPhAnjQcyPNKw_CM1e8WmpLxLXxdHkEdGp1xMrir4qJFmu43KMvpNLQRBMNuW0_Ssc_2MV_r5B9-WgEchSxoPnViCxD3XlozIO4-tdvz2sXSnbgJVBIvZLHDa1mJRyQ_BvHuHGmqDzbYMUr0GP0PUxzr-ZmftYTnR6-6CtaT3aKpHFwjMReSwBpXb-wmV1Vu19_69aJ8EBYfMSz_utEZ9heaaVOdS2rjqBNciMpJmPNlq1fJTp1mEEe9MJNxH_KUOrn_iWHu0eImQfaB8AqdJnR6Wh2xH45Wqol9qAEVv4L6HwjKitT4Yrz2JbCmpzIz5sktUnEWsDOGBmg4AabI-PZeHVQH6p_94r5KGIusZ14nSnir38E6pQscUdAOAHGEvcQTuy7eTQxp0bdsI5GbPTgha9I_od8SumJiQ31cSkCQTlOlj110HDrryBk5ksOvPk_7dmPq6wMc7yHk5L0f6NwW5DQznRy2Sm1llr4aafb887AFKM0jdBGLG9_TxbjXxKpVFUe-VFaA3_lZnRoGIk0OY5QIhF_wPYhQc9zFrouJ6C-Q2OaTlWDEGjDLdLInKLJ9gvxLrNuu_SoH6IJXCsSl2xuNKjcVlTYDBu6ouJjTeZn5QEHWrqP2-bDKz3k_x3sAkcgM27u2fOfd20d089IUvPoR4Z-PM2IqClalq6zk0zIzvk5Q2to-i_r-DhpPhn20mCRZWrrjNNde30K0H3GQCkyBifDWjt2o9WZOfX6OC4g8ozeoqJykk1CN_pzmCcP8VriuFcDWK1N9wJFS0Vp7jaIMyQAd7ZAern9lwyA-7yHrRXKKD5sK7xmiBDEQ-IIEdUL4MaJjA2x5FNZKd1dV0fQ91jbV35WTXFG_tGL4mJJ-GGLfRRR-7YzjEmREB1Jvy_1Xdw1ZkOKRVSNwed1pKBP1sMG9HzH0_jxMFSHo=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_EOxq0Si9fSN_nPxrrsUxgp4tr55GN-zInFTykO4wrjchXOGXWZ_HhgBq4TlC1ZUXUteLTQswbDKHVMwq-bmc6SaypNQj66Kru7yKzSnkBFwehWdRsQhm-5reaBaGQqK5mEzEfGsgia6F9f3Gj8hkzvpImqvu9-wZTMaVYstnF_k0mvOiN5QH-YCglYeLvppAuP2pXUPhAnjQcyPNKw_CM1e8WmpLxLXxdHkEdGp1xMrir4qJFmu43KMvpNLQRBMNuW0_Ssc_2MV_r5B9-WgEchSxoPnViCxD3XlozIO4-tdvz2sXSnbgJVBIvZLHDa1mJRyQ_BvHuHGmqDzbYMUr0GP0PUxzr-ZmftYTnR6-6CtaT3aKpHFwjMReSwBpXb-wmV1Vu19_69aJ8EBYfMSz_utEZ9heaaVOdS2rjqBNciMpJmPNlq1fJTp1mEEe9MJNxH_KUOrn_iWHu0eImQfaB8AqdJnR6Wh2xH45Wqol9qAEVv4L6HwjKitT4Yrz2JbCmpzIz5sktUnEWsDOGBmg4AabI-PZeHVQH6p_94r5KGIusZ14nSnir38E6pQscUdAOAHGEvcQTuy7eTQxp0bdsI5GbPTgha9I_od8SumJiQ31cSkCQTlOlj110HDrryBk5ksOvPk_7dmPq6wMc7yHk5L0f6NwW5DQznRy2Sm1llr4aafb887AFKM0jdBGLG9_TxbjXxKpVFUe-VFaA3_lZnRoGIk0OY5QIhF_wPYhQc9zFrouJ6C-Q2OaTlWDEGjDLdLInKLJ9gvxLrNuu_SoH6IJXCsSl2xuNKjcVlTYDBu6ouJjTeZn5QEHWrqP2-bDKz3k_x3sAkcgM27u2fOfd20d089IUvPoR4Z-PM2IqClalq6zk0zIzvk5Q2to-i_r-DhpPhn20mCRZWrrjNNde30K0H3GQCkyBifDWjt2o9WZOfX6OC4g8ozeoqJykk1CN_pzmCcP8VriuFcDWK1N9wJFS0Vp7jaIMyQAd7ZAern9lwyA-7yHrRXKKD5sK7xmiBDEQ-IIEdUL4MaJjA2x5FNZKd1dV0fQ91jbV35WTXFG_tGL4mJJ-GGLfRRR-7YzjEmREB1Jvy_1Xdw1ZkOKRVSNwed1pKBP1sMG9HzH0_jxMFSHo=w1265-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Community Collaboration</div>
+                </div>
+            </div>
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_GuPz7pQloMFU1AdG3QpXcaDsuKvwpQ3hzO7t7b_yGltzMtX9x1ExmkHIwfqMgbi6A9UnOFz9wbcHq7On7Mhc2BUcC3SWN__yXjN-V6lwnESMuzVu2HAsTBIF6-B8FpEJxKqfx6wpJuuqnmlAbzbDysiw6inQVqQIwgJw5tSd29LLqAKY9J3DdBEo5sfeSLpkVACLlmOvj9PPrHZXQFixpr3Is9IExLZXRL55OtQqzW1R0ZP4v_3xVqnjjBKLd6D-ef98uxqbwJnR0ZcyaYtO1mo0kV_oUJOES0YZr1olukilQpA_RH1UpJuSljrDF0lG-q__hkRJ_bGAIHDLZgKKrZIoGGR-54264qHIk9RFPKb9qMAETG9DiEgtCSFPltqQq6CRUebmyGnGQ7DXN1U9Hb0RM2QoTsUOGFX-EVszOXssAv8peAZ87OjcBjQowcQwwZjoe4JPHu-rTgpBxU5AYd-q2HgbtZTlhHAMM4RFRI32B1M40KsLtt_RZn3vI0FQv3WBPESpOCleYIOrMeVF4WvYt0ZJorfIjqoYc2mJLo-xq8vG-kRjBhsKHUsUnASn7eLS75f005SUGBK3BhFLAEhOpPTNadw1VBjS4Rx8Gire4VZIEbH-jXBjFUGj5VMuG1lNlo0nldTnTpPKgAeiqaC5ZrR9ZUSQ1p1dWjz8-psfUfc5w3aRySmtI4cy3WStPbmy9GEVpCOHqireyTrZ9zxyLQxV4JcnqlM_IqauaJXaQV59wVn7lgYCFFTfiywo4AQyr8cD6fkALDF9FGmFx7bSnJcPAt0MuA_t5ts4EfbcovMEybiVTbL3P-RwObUqPtQaopYyQy2NRyxB4hGEbYu_63sky7NVC6PEjB4MNrpO8QlYRYhENnq8mD_-1Sj-cb0ONCJQynyeZLosgdEtwNZjDlPpgC4kaDj8vcaQ0GO7TCQfpxKKmedeXjU56GIlv4UgJzqfEWPZO5LEX03mH1QcmRjrgtgeJr0VDgG53yJ_M6wczno69brADQsPaCp5DQo0lk6Sj6gxRNM4Yupkt5ykl9HxFm8ZifWAtopnwJxgWSsyWcDAPI91j6DmP1AhKM5TzQ7zBA1DB631fLe7w7YTJuRgtSXkr6kp9MB5kCxNhr5PY=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_GuPz7pQloMFU1AdG3QpXcaDsuKvwpQ3hzO7t7b_yGltzMtX9x1ExmkHIwfqMgbi6A9UnOFz9wbcHq7On7Mhc2BUcC3SWN__yXjN-V6lwnESMuzVu2HAsTBIF6-B8FpEJxKqfx6wpJuuqnmlAbzbDysiw6inQVqQIwgJw5tSd29LLqAKY9J3DdBEo5sfeSLpkVACLlmOvj9PPrHZXQFixpr3Is9IExLZXRL55OtQqzW1R0ZP4v_3xVqnjjBKLd6D-ef98uxqbwJnR0ZcyaYtO1mo0kV_oUJOES0YZr1olukilQpA_RH1UpJuSljrDF0lG-q__hkRJ_bGAIHDLZgKKrZIoGGR-54264qHIk9RFPKb9qMAETG9DiEgtCSFPltqQq6CRUebmyGnGQ7DXN1U9Hb0RM2QoTsUOGFX-EVszOXssAv8peAZ87OjcBjQowcQwwZjoe4JPHu-rTgpBxU5AYd-q2HgbtZTlhHAMM4RFRI32B1M40KsLtt_RZn3vI0FQv3WBPESpOCleYIOrMeVF4WvYt0ZJorfIjqoYc2mJLo-xq8vG-kRjBhsKHUsUnASn7eLS75f005SUGBK3BhFLAEhOpPTNadw1VBjS4Rx8Gire4VZIEbH-jXBjFUGj5VMuG1lNlo0nldTnTpPKgAeiqaC5ZrR9ZUSQ1p1dWjz8-psfUfc5w3aRySmtI4cy3WStPbmy9GEVpCOHqireyTrZ9zxyLQxV4JcnqlM_IqauaJXaQV59wVn7lgYCFFTfiywo4AQyr8cD6fkALDF9FGmFx7bSnJcPAt0MuA_t5ts4EfbcovMEybiVTbL3P-RwObUqPtQaopYyQy2NRyxB4hGEbYu_63sky7NVC6PEjB4MNrpO8QlYRYhENnq8mD_-1Sj-cb0ONCJQynyeZLosgdEtwNZjDlPpgC4kaDj8vcaQ0GO7TCQfpxKKmedeXjU56GIlv4UgJzqfEWPZO5LEX03mH1QcmRjrgtgeJr0VDgG53yJ_M6wczno69brADQsPaCp5DQo0lk6Sj6gxRNM4Yupkt5ykl9HxFm8ZifWAtopnwJxgWSsyWcDAPI91j6DmP1AhKM5TzQ7zBA1DB631fLe7w7YTJuRgtSXkr6kp9MB5kCxNhr5PY=w1265-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Building Resilience</div>
+                </div>
+            </div>
+
+            <div class="card-wrapper"
+                onclick="openModal('https://lh3.googleusercontent.com/rd-d/ALs6j_FByCu3JJRR_Q_Oa0cleu6Sr8x3q7DE6n66EXMAihbAx-X-POEWKrgr1jFgalt8iRQx2pSS2X2OWs39f25jHUiYEpaAD1BNMmRGLJtUqo0f6Pb4ldmEmuNZ1PoQxqv08xiWdiriYxFsCmWA1vn9_I92BEGn3SfxIFMSiEfr-89q993HP9TGQgtj6JZUOCikzgwvuTPWTzibMnNGnEIHZ3U6nkSPdinJqRDJO7xCNs09eM0Hymy6FJDAH6zC6zJJQ8U62OO5SS-iR8DuFzohh2id3ywSHta5F_4ahv2V4pXBRAJwTNaevtN6DQcwctkaMtr4wPJ0ffjCQGZumE5JumjWSTBnOm2rLuMlMsFgtkpmXQnWPug6JBf_21ll5gXastkGtEZxbA4A6jSgeFJ_3fMDTw6pA_iw-RCWmExvc6tdSslr5IA_6BHee3eWAXPJ_AucW2OvYaqQdAxT1eNyZ_6DcN67AuMJW0OFa6KpV5dii_C3EzRb4K3vxQixh-Hye0a3VfqJx_-929FlRUoZSXmetEXwDGW3MlGFg1SxhMo38ve6CfRfE1f7fQfWmXfdNgBjug5nxyWe4xNAiKKcVVca9mO27GwbmlR0A3AlQlRlnj4-XjSjKRo1cmf04IWca512_EPA2xsCEKLxsILK7FpmaPLSNR6T6IKrq0gyUK5aeGdmh7mwPUSR3xTr_9X9lufe3D5NHpScMhdVj4G3U3d53wzMieLZJHPeDK5MgCjRc-IcWDMCgA1-4CEHzfn98egcaHRTboJrRqobIrc0fIYye04RhIyqpLf7Zc1_84r7XXjqIIfXh1USA-S6YmAshLIM_OAHOIKGrq8-u1lpk5-dwUKwwtLNW0z65oKEbDnvoV3Y2O9S_qSBKhto-ShSYXxoa4xT6cVEVigpiyoz4UA3d5MgsbbrNF7Vx-cak-TCkXDrsSMC1Ou_BQwRGxA4xORtQph3SAHSJjwkxIUphQvFNXrSwkhldB_R0B0c0MNNHx9vu35gtS1Ns6p8DiYk1gm57GRVs20EaY9FBbvj8WhG1Bj3adYPxfwlPBYLTqjGZL5dIk8uiljvhcJAplmtNyehe4WgYXDWzOYXZwqjfOZoI01DkH52U29npGWn4AViolaMP0Q=w1265-h982?auditContext=prefetch')">
+                <div class="card">
+                    <div class="card-bg-img"
+                        style="background-image:url('https://lh3.googleusercontent.com/rd-d/ALs6j_FByCu3JJRR_Q_Oa0cleu6Sr8x3q7DE6n66EXMAihbAx-X-POEWKrgr1jFgalt8iRQx2pSS2X2OWs39f25jHUiYEpaAD1BNMmRGLJtUqo0f6Pb4ldmEmuNZ1PoQxqv08xiWdiriYxFsCmWA1vn9_I92BEGn3SfxIFMSiEfr-89q993HP9TGQgtj6JZUOCikzgwvuTPWTzibMnNGnEIHZ3U6nkSPdinJqRDJO7xCNs09eM0Hymy6FJDAH6zC6zJJQ8U62OO5SS-iR8DuFzohh2id3ywSHta5F_4ahv2V4pXBRAJwTNaevtN6DQcwctkaMtr4wPJ0ffjCQGZumE5JumjWSTBnOm2rLuMlMsFgtkpmXQnWPug6JBf_21ll5gXastkGtEZxbA4A6jSgeFJ_3fMDTw6pA_iw-RCWmExvc6tdSslr5IA_6BHee3eWAXPJ_AucW2OvYaqQdAxT1eNyZ_6DcN67AuMJW0OFa6KpV5dii_C3EzRb4K3vxQixh-Hye0a3VfqJx_-929FlRUoZSXmetEXwDGW3MlGFg1SxhMo38ve6CfRfE1f7fQfWmXfdNgBjug5nxyWe4xNAiKKcVVca9mO27GwbmlR0A3AlQlRlnj4-XjSjKRo1cmf04IWca512_EPA2xsCEKLxsILK7FpmaPLSNR6T6IKrq0gyUK5aeGdmh7mwPUSR3xTr_9X9lufe3D5NHpScMhdVj4G3U3d53wzMieLZJHPeDK5MgCjRc-IcWDMCgA1-4CEHzfn98egcaHRTboJrRqobIrc0fIYye04RhIyqpLf7Zc1_84r7XXjqIIfXh1USA-S6YmAshLIM_OAHOIKGrq8-u1lpk5-dwUKwwtLNW0z65oKEbDnvoV3Y2O9S_qSBKhto-ShSYXxoa4xT6cVEVigpiyoz4UA3d5MgsbbrNF7Vx-cak-TCkXDrsSMC1Ou_BQwRGxA4xORtQph3SAHSJjwkxIUphQvFNXrSwkhldB_R0B0c0MNNHx9vu35gtS1Ns6p8DiYk1gm57GRVs20EaY9FBbvj8WhG1Bj3adYPxfwlPBYLTqjGZL5dIk8uiljvhcJAplmtNyehe4WgYXDWzOYXZwqjfOZoI01DkH52U29npGWn4AViolaMP0Q=w1265-h982?auditContext=prefetch');">
+                    </div>
+                    <div class="card-label">Impact</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-info">
+            <div class="info-block">
+                <h3>Role</h3>
+                <p>Volunteer</p>
+            </div>
+            <div class="info-block">
+                <h3>Location</h3>
+                <p>Rukum-West, Nepal</p>
+            </div>
+            <div class="info-block">
+                <h3>Date</h3>
+                <p>2023</p>
+            </div>
+
+            <div class="description">
+                <ul>
+                    <li>Contributed to the construction of 21 homes for families impacted by the 2023 earthquake in
+                        Rukum-West, in collaboration with Human Development and Community Services (HDCS).</li>
+                    <li>Developed and implemented sustainable construction techniques, promoting long-term resilience
+                        against future earthquakes and contributing to environmental sustainability.</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="imageModal" onclick="closeModal()">
+        <span class="close-btn">&times;</span>
+        <img id="modalImg" src="">
+    </div>
+
+    <script>
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+
+        function openModal(url) {
+            modal.style.display = 'flex';
+            modalImg.src = url;
+            // Prevent body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+            // Restore body scroll
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+
+</body>
+
+</html>
