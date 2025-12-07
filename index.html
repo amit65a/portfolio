@@ -1,13 +1,489 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>First Web Page</title>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/jpeg"
+    href="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suman Sharma | Software Engineer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    html {
+      font-size: 90%;
+    }
+    ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #88888817;
+        border-radius: 6px;
+        border: 3px solid #f1f1f196;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #0f172a;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #0f172a;
+        border-radius: 6px;
+      }
+
+      ::-webkit-scrollbar-track:hover {
+        background-color: #0f172a;
+      }
+
+      .typing-container {
+        display: inline-block;
+        position: relative;
+        padding: 4px;
+      }
+
+      #typedText::after {
+        content: "|";
+        position: absolute;
+        right: -5px;
+        opacity: 0;
+        animation: blink 0.6s infinite step-start;
+      }
+
+      @keyframes blink {
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @layer utilities {
+        .text-balance {
+          text-wrap: balance;
+        }
+      }
+
+      .nav-link.active .nav-indicator {
+        width: 4rem;
+        background-color: #e2e8f0;
+      }
+      .nav-link.active .nav-text {
+        color: #e2e8f0;
+      }
+      @media (min-width: 1024px) {
+        .group-list:hover > .group-list-item {
+          opacity: 0.5;
+        }
+        .group-list:hover > .group-list-item:hover {
+          opacity: 1;
+        }
+      }
+
+      #imageModal img {
+        max-width: 80vw;
+        max-height: 80vh;
+      }
+
+      .fade-in-section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .fade-in-section.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      #image-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 50;
+      }
+
+      #modal-image {
+        max-width: 80vw;
+        max-height: 80vh;
+        object-fit: contain;
+        border-radius: 8px;
+      }
+
+      #close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 100;
+      }
+
+      .blog-articles-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
+      .blog-article-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      .blog-article-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .blog-article-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .blog-article-content {
+        padding: 20px;
+      }
+
+      .blog-article-meta {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #f3efef;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+
+      .blog-article-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .blog-meta-separator {
+        width: 4px;
+        height: 4px;
+        background: #999;
+        border-radius: 50%;
+      }
+
+      .blog-article-title {
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: #ffffff;
+      }
+
+      /* Blog Modal Styles */
+      /* Blog Modal - Neon Glass Redesign */
+      .blog-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        overflow-y: auto;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .blog-modal.active {
+        display: block;
+      }
+
+      .blog-modal-content {
+        background: rgba(15, 23, 42, 0.95);
+        max-width: 800px;
+        margin: 40px auto;
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(45, 212, 191, 0.3);
+        box-shadow: 0 0 50px rgba(45, 212, 191, 0.15);
+        animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .blog-modal-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+      }
+
+      .blog-modal-body {
+        padding: 40px;
+        color: #cbd5e1;
+      }
+
+      .blog-modal-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font-size: 14px;
+        color: #2dd4bf;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        font-family: monospace;
+      }
+
+      .blog-modal-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .blog-modal-title {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        color: #f1f5f9;
+        line-height: 1.3;
+        text-shadow: 0 0 20px rgba(45, 212, 191, 0.2);
+      }
+
+      .blog-modal-text {
+        font-size: 17px;
+        line-height: 1.8;
+        color: #94a3b8;
+        white-space: pre-line;
+      }
+      
+      .blog-modal-text b {
+        color: #e2e8f0;
+        font-weight: 700;
+      }
+
+      .blog-close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(45, 212, 191, 0.4);
+        color: #2dd4bf;
+        font-size: 24px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        z-index: 10;
+        backdrop-filter: blur(4px);
+      }
+
+      .blog-close-btn:hover {
+        transform: rotate(90deg);
+        background: #2dd4bf;
+        color: #0f172a;
+        box-shadow: 0 0 20px rgba(45, 212, 191, 0.6);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Staggered Animation Classes */
+      .stagger-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      
+      .stagger-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .stagger-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
 </head>
 
-<body>
-    Hello World!<br>
-    Hello Portfolio
+<body class="bg-slate-900 leading-relaxed text-slate-400 antialiased selection:bg-teal-300 selection:text-teal-900">
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress" class="fixed top-0 left-0 h-1 z-[60] bg-teal-500 transition-all duration-100 ease-out w-0">
+  </div>
+
+  <div class="fixed top-6 right-6 z-50 lg:hidden">
+    <button id="mobile-nav-toggle" aria-label="Open navigation" aria-expanded="false"
+      class="p-2 rounded-md bg-slate-800/50 text-slate-200 backdrop-blur-sm">
+      <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="group/spotlight relative">
+    <div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300"></div>
+    <div class="min-h-screen max-w-screen-3xl px-6 py-6 font-sans md:px-12 md:py-20 lg:px-24 lg:py-0">
+      <div class="lg:flex lg:justify-between lg:gap-0">
+        <header
+          class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:overflow-hidden">
+          <div
+            class="lg:flex-1 lg:overflow-y-auto lg:pr-4 lg:pt-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <img class="rounded-full h-32 w-32 mb-6 border-2 border-slate-700"
+              src="https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              alt="Profile picture of Suman Sharma" />
+            <h1 class="text-3xl font-bold tracking-tight text-slate-200 sm:text-4xl">
+              <a href="/">Suman Sharma</a>
+            </h1>
+            <h2 class="mt-3 text-base font-medium tracking-tight text-slate-200 sm:text-lg">
+              Software Engineer & Financial Economics Minor
+            </h2>
+            <div class="typing-container">
+              <span class="mt-4 max-w-xs leading-normal text-slate-400">I build</span>
+              <span id="typedText" class="font-bold"> </span>
+            </div>
+            <nav id="nav-links-container"
+              class="nav fixed -left-full top-0 h-full w-full bg-slate-900/95 p-4 transition-transform duration-300 z-40 lg:relative lg:left-auto lg:top-auto lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:block"
+              aria-label="In-page jump links"></nav>
+            </ul>
+          </div>
+          <div class="py-4 mt-auto">
+            <ul class="ml-1 flex items-center" aria-label="Social media">
+              <li class="mr-5 shrink-0 hover:scale-125">
+                <a class="block hover:text-slate-200 magnetic-btn transition-transform duration-200 ease-out"
+                  href="https://www.linkedin.com/in/suman-sharma-02aa4a192/" target="_blank" rel="noreferrer noopener"
+                  aria-label="LinkedIn (opens in a new tab)">
+                  <span class="sr-only">LinkedIn</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"
+                    aria-hidden="true">
+                    <path
+                      d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.25 6.5 1.75 1.75 0 016.5 8.25zM19 19h-3v-4.75c0-1.4-1.1-2.5-2.5-2.5S11 12.85 11 14.25V19h-3v-9h2.9v1.3a3.5 3.5 0 013.1-1.8c2.4 0 4.5 1.8 4.5 5.2V19z">
+                    </path>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </header>
+
+        <main id="content" class="pt-4 active lg:w-full lg:pt-12">
+          <div class="w-full flex justify-end">
+            <button id="download-btn"
+              class="bg-slate-900 w-fit text-white py-1 px-4 rounded hover:border-slate-700 border-2 flex items-end">
+              Download CV
+            </button>
+          </div>
+          <section id="about"
+            class="fade-in-section text-xl text-justify mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="About me"></section>
+          <section id="experience" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="Work experience"></section>
+          <section id="projects" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="Selected projects"></section>
+          <section id="publications" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="Publications"></section>
+          <section id="certifications" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="Certifications"></section>
+
+          <section id="volunteer" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24"
+            aria-label="Volunteering"></section>
+
+          <section id="blog" class="fade-in-section mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-2"
+            aria-label="Blog Articles"></section>
+
+          <div id="image-modal" class="fixed inset-0 z-500 bg-black bg-opacity-70">
+            <div class="flex items-center justify-center h-full">
+              <div class="relative">
+                <span id="close-modal" class="absolute top-0 right-0 p-4 cursor-pointer text-white font-bold text-xl"
+                  onclick="closeModal()">
+                  X
+                </span>
+                <img id="modal-image" src="" alt="Larger Image" class="max-w-full max-h-full object-contain" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Blog Modal -->
+          <div class="blog-modal" id="blogModal">
+            <div class="blog-modal-content">
+              <button class="blog-close-btn" onclick="closeBlogModal()">
+                &times;
+              </button>
+              <img src="" alt="" class="blog-modal-image" id="blogModalImage" />
+              <div class="blog-modal-body">
+                <h2 class="blog-modal-title" id="blogModalTitle"></h2>
+                <div class="blog-modal-meta" id="blogModalMeta"></div>
+                <p class="blog-modal-text" id="blogModalText"></p>
+              </div>
+            </div>
+          </div>
+
+          <section id="contact" class="fade-in-section mb-16 scroll-mt-16 md:mb-8 lg:mb-6 lg:scroll-mt-24"
+            aria-label="Contact me"></section>
+        </main>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Zoom Warning Notification -->
+  <!-- Zoom Warning Notification -->
+  <div id="zoom-warning"
+    class="fixed top-4 left-1/2 z-50 hidden max-w-sm transform -translate-x-1/2 -translate-y-[150%] opacity-0 transition-all duration-300 ease-in-out">
+    <div class="bg-amber-100 border-l-4 border-amber-500 text-amber-900 p-4 rounded shadow-lg flex items-start gap-3">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div>
+        <p class="font-bold text-sm">Better View Available</p>
+        <p class="text-xs mt-1">Try zooming out (Windows: Ctrl + -, Mac: Cmd + -) for a better view of all links.</p>
+      </div>
+      <button onclick="dismissZoomWarning()" class="text-amber-500 hover:text-amber-700 transition-colors">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="back-to-top" aria-label="Back to top"
+    class="fixed bottom-8 right-8 z-40 p-3 bg-teal-500 text-slate-900 rounded-full shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 hover:bg-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 focus:ring-offset-slate-900">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </button>
+
+  <script src="portfolio.js"></script>
 </body>
 
 </html>
